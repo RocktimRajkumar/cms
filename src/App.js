@@ -13,6 +13,7 @@ import Student from './pages/student/Student';
 import Department from './pages/department/Department'
 import Course from './pages/course/Course'
 import Semester from './pages/semester/Semester'
+import Subject from './pages/subject/Subject'
 
 const user = localStorage.getItem("User");
 const userDetails = JSON.parse(user);
@@ -45,6 +46,7 @@ const App  = ()=>{
                         <Route exact path="/department" component={Department} />
                         <Route exact path="/course" component={Course} />
                         <Route exact path="/semester" component={Semester} />
+                        <Route exact path="/subject" component={Subject} />
                     
                         
                     </Switch>
