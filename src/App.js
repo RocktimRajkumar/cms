@@ -5,7 +5,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
 import Sidebar from './components/Sidebar';
 import Dashboard from '../src/pages/dashboard/Dashboard';
-import Report from '../src/pages/myReports/reports/Report';
+
 import NavBar from './components/NavBar';
 import Login from './pages/auth/Login';
 import Admin from './pages/adminManagement/Admin';
@@ -37,7 +37,6 @@ const App  = ()=>{
                     <Switch>
                     
                         <Route exact path="/dashboard" component={Dashboard} />
-                        <Route exact path="/reports" component={Report} />
                         <Route exact path="/admin" component={Admin} />
                         <Route exact path="/student" component={Student} />
                     
