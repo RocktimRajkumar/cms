@@ -11,6 +11,7 @@ import Login from './pages/auth/Login';
 import Admin from './pages/adminManagement/Admin';
 import Student from './pages/student/Student';
 import Department from './pages/department/Department'
+import Course from './pages/course/Course'
 
 const user = localStorage.getItem("User");
 const userDetails = JSON.parse(user);
@@ -41,6 +42,7 @@ const App  = ()=>{
                         <Route exact path="/admin" component={Admin} />
                         <Route exact path="/student" component={Student} />
                         <Route exact path="/department" component={Department} />
+                        <Route exact path="/course" component={Course} />
                     
                         
                     </Switch>
