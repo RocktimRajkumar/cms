@@ -30,6 +30,7 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             </label>
             <input type="text"
               name="name"
+              value={formData.name}
               onChange={handleChange}
               className="form-control price-form-data " />
           </div>
@@ -39,6 +40,7 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             </label>
             <input type="text"
               name="email"
+              value={formData.email}
               onChange={handleChange}
               className="form-control price-form-data " />
           </div>
@@ -49,6 +51,7 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             <input 
               type="text"
               name="phone"
+              value={formData.phone}
               onChange={handleChange}
               className="form-control price-form-data " />
           </div>
@@ -58,6 +61,7 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             Gender
           </label>
             <Select
+                defaultValue={formData.gender}
                 options={options}
                 className="price-form-data "
                 onChange={onSelectChange("gender")}
@@ -78,6 +82,7 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             Department
           </label>
             <Select
+              value={formData.dept_id}
                 options={departmentOptions}
                 className="price-form-data "
                 onChange={onSelectChange("dept_id")}
@@ -101,10 +106,10 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
               Role
             </label>
             <input
-              placeholder="Role"
+              placeholder="Roll No"
               type="text"
-              name="role"
-              value={formData.role}
+              name="rollno"
+              value={formData.rollno}
               onChange={handleChange}
             />
         </div>

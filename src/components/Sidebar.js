@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import WaycoolSidebarLogo from '../assets/img/sidebar/WaycoolSidebarLogo.png'
 import user from '../assets/img/users/100_3.jpg'
 import MenuItem from './MenuItem';
-import {adminMenuItem} from './sidebarMenuItem';
+import {adminMenuItem, userMenuItem} from './sidebarMenuItem';
 
 /** 
 *@author Dhirendra Kumar Sahani
 * @function Sidebar 
 **/
 
+const type = "Admin";
+const menus = type==="Admin" ? adminMenuItem : type==="User" ? userMenuItem:[];
 
 const Sidebar = (props)=>{
     const [inactive, setInactive] = React.useState(false);
@@ -48,7 +50,7 @@ const Sidebar = (props)=>{
             <div className="main-menu  " >
                 <ul className="p-0  ">
                     {
-                        adminMenuItem && adminMenuItem.map((menuItem, index)=>(
+                        menus && menus.map((menuItem, index)=>(
                             <MenuItem
                             key="index"
                             name={menuItem.name}

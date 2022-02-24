@@ -105,14 +105,17 @@ console.log(props.records)
                                                 <div className="d-flex  ">
                                                     <Tooltip title="Edit User" placement="bottom">
                                                         <button 
-                                                        onClick={()=>props.editClickHandler(record)}
+                                                        
+                                                        onClick={()=>props.updatehandler(record)}
                                                         className={`border-0 p-1 action-btn`} 
                                                         style={{marginRight:"10px"}}>
                                                             <OpenInNewIcon/>
                                                         </button>    
                                                     </Tooltip>
                                                     <Tooltip title="Delete User" placement="bottom">
-                                                        <button className={`border-0 p-1 action-btn`} >
+                                                        <button
+                                                        onClick={()=>props.editClickHandler(record)}
+                                                         className={`border-0 p-1 action-btn`} >
                                                             <DeleteOutlineIcon/>
                                                         </button>
                                                     </Tooltip>

@@ -10,6 +10,7 @@ const Student = (props) =>{
     const [isOpen, setOpen] = useState(false)
     const [id, setId] = useState('');
     const [editMode, setEditMode] = useState(false);
+    const [rowData, setRowData] = useState({});
     const [records, setRecords] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -99,6 +100,7 @@ const Student = (props) =>{
               alert("Student created");
               clearForm();
               handleForm();
+              getStudentRecords();
 
             })
             .catch(function (error) {
@@ -107,6 +109,13 @@ const Student = (props) =>{
         }
         
     }
+
+    const updatehandler = (record) =>{
+        handleForm();
+        setRowData(record);
+        setFormData(record);
+    }
+
     return (
         <div className="w-100 p-5" style={{height:"calc(100% - 64px)", overflow:"auto"}}>
             <div className='row'>
@@ -133,6 +142,7 @@ const Student = (props) =>{
                 ):
                 (
                     <StudentTable
+                    updatehandler={updatehandler}
                     records={records}/>
                 )
             }
