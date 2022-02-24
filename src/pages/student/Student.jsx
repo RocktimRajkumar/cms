@@ -4,6 +4,7 @@ import axios from 'axios';
 import './style.css'
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable'
+import Password from 'antd/lib/input/Password';
 
 
 const Student = (props) =>{
@@ -12,6 +13,7 @@ const Student = (props) =>{
     const [editMode, setEditMode] = useState(false);
     const [rowData, setRowData] = useState({});
     const [records, setRecords] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         state: "",
@@ -30,12 +32,20 @@ const Student = (props) =>{
 
     useEffect(()=>{
         getStudentRecords();
+        getDepartments();
     },[])
     const getStudentRecords = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/student');
         if(res){
             console.log("check res", res.data.message.records);
             setRecords(res.data.message.records);
+        }
+    }
+    const getDepartments = async () =>{
+        const res = await axios.get('https://exam-manag.herokuapp.com/department');
+        if(res){
+            console.log("check res", res);
+            setDepartments(res.data.message.records);
         }
     }
 
@@ -50,15 +60,15 @@ const Student = (props) =>{
             email: "",
             gender: "",
             dob: "",
-            dept_id: 1,
+            dept_id: "",
             batch: "",
-            rollno: 2,
+            rollno: "",
             pwd: ""
         })
     }
-    const handleChange = (e) => {
+    const handleChange = name => (e) => {
         e.preventDefault();
-        const fieldName = e.target.getAttribute("name");
+        const fieldName = name;
         const fieldValue = e.target.value;
         const newFormData = { ...formData };
         newFormData[fieldName] = fieldValue;
@@ -67,6 +77,8 @@ const Student = (props) =>{
 
     const handleForm = () =>{
         setOpen(open=> !open)
+        setEditMode(false)
+        clearForm();
     }
     
     const onSelectChange = (name) => (e) => {
@@ -94,18 +106,35 @@ const Student = (props) =>{
         console.log(formData);
         const validated = isValidated();
         if(validated){
-            axios.post('https://exam-manag.herokuapp.com/student', formData)
+            if(!editMode){
+                axios.post('https://exam-manag.herokuapp.com/student', formData)
+                .then(function (response) {
+                    console.log(response)
+                  alert("Student created");
+                  clearForm();
+                  handleForm();
+                  getStudentRecords();
+    
+                })
+                .catch(function (error) {
+                  console.log("err",error);
+                });
+            }else{
+            let updatedData = formData;
+            updatedData["is_active"]=true;
+            axios.put(`https://exam-manag.herokuapp.com/student/${rowData.student_id}`, updatedData)
             .then(function (response) {
                 console.log(response)
-              alert("Student created");
-              clearForm();
-              handleForm();
-              getStudentRecords();
+                alert("Student Updated");
+                clearForm();
+                handleForm();
+                getStudentRecords();
 
             })
             .catch(function (error) {
               console.log("err",error);
             });
+            }
         }
         
     }
@@ -113,7 +142,37 @@ const Student = (props) =>{
     const updatehandler = (record) =>{
         handleForm();
         setRowData(record);
-        setFormData(record);
+        const {
+            s_name,
+            state,
+            pincode,
+            district,
+            city,
+            phone,
+            email,
+            gender,
+            dob,
+            dept_id,
+            batch,
+            rollno,
+            password} = record;
+        setFormData({
+            name:s_name,
+            state,
+            pincode,
+            district,
+            city,
+            phone,
+            email,
+            gender,
+            dob,
+            dept_id,
+            batch,
+            rollno,
+            pwd: password
+        });
+        setEditMode(true)
+
     }
 
     return (
@@ -133,11 +192,13 @@ const Student = (props) =>{
             {
                 isOpen ? (
                     <StudentForm 
+                    departments={departments}
                     dateHandler={dateHandler}
                     submitHandler={submitHandler}
                     onSelectChange={onSelectChange}
                     handleChange={handleChange} 
                     formData={formData}
+                    editMode={editMode}
                     />
                 ):
                 (

@@ -1,24 +1,28 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Select from "react-select";
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-
-
+import {InputControl} from '../../utils/FormControls';
+import axios from 'axios';
 const options = [
   { value: "Male", label: "Male" },
   { value: "Female", label: "Female" },
 ];
-const departmentOptions = [
-  { value: 1, label: "Department1" },
-  { value: 2, label: "Department2" },
-  { value: 3, label: "Department3" },
-];
-const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formData, editMode, onSelectChange}) => {
-  
-  
- 
+
+const StudentForm = ({handleChange,departments,dateHandler,submitHandler, handleClick, formData, editMode, onSelectChange}) => {
+
+ const departmentNames = departments && departments.map(dept=>({
+   value:dept.dept_id,
+   label:dept.dept_name
+ }))
+
+ const departmentName = id =>{
+  return departmentNames?.find(obj => obj.value == id);
+ }
+
+console.log(formData)
   return (
     <div className="w-100 p-5" >
         <div className='d-flex justify-content-center'>
@@ -30,8 +34,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             </label>
             <input type="text"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
+              value={formData && formData.name}
+              onChange={handleChange("name")}
               className="form-control price-form-data " />
           </div>
           <div className='col-md-4'>
@@ -40,9 +44,11 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             </label>
             <input type="text"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="form-control price-form-data " />
+              value={formData && formData.email}
+              onChange={handleChange("email")}
+              className="form-control price-form-data " 
+              disabled={editMode}
+              />
           </div>
           <div className='col-md-4'>
             <label className="location-form-label" for="inputPassword4">
@@ -51,13 +57,15 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             <input 
               type="text"
               name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="form-control price-form-data " />
+              value={formData && formData.phone}
+              onChange={handleChange("phone")}
+              className="form-control price-form-data "
+               disabled={editMode}
+               />
           </div>
         
           <div className=" col-md-4 mt-3">
-          <label className="location-form-label" for="inputEmail4">
+          {/* <label className="location-form-label" for="inputEmail4">
             Gender
           </label>
             <Select
@@ -65,20 +73,30 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 options={options}
                 className="price-form-data "
                 onChange={onSelectChange("gender")}
-            />
+            /> */}
+            <InputControl
+            type="select"
+            name="gender"
+            labelName="Gender"
+            placeholder="Select your gender"
+            onChange={onSelectChange("gender")}
+            value={formData && formData.gender}
+            options={options}
+            required
+          />
         </div>
         <div className='col-md-4 mt-3'>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             label="DOB"
-            value={formData.dob}
+            value={formData && formData.dob}
             onChange={dateHandler}
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
           </div>
           <div className=" col-md-4 mt-3">
-          <label className="location-form-label" for="inputEmail4">
+          {/* <label className="location-form-label" for="inputEmail4">
             Department
           </label>
             <Select
@@ -86,7 +104,17 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 options={departmentOptions}
                 className="price-form-data "
                 onChange={onSelectChange("dept_id")}
-            />
+            /> */}
+           <InputControl
+            type="select"
+            name="dept_id"
+            labelName="Department"
+            placeholder="Select department"
+            onChange={onSelectChange("dept_id")}
+            value={formData ? departmentName(formData.dept_id):""}
+            options={departmentNames}
+            required
+          />
         </div>
         
         <div className='col-md-4 mt-3'>
@@ -97,20 +125,20 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
               placeholder="Batch"
               type="text"
               name="batch"
-              value={formData.batch}
-              onChange={handleChange}
+              value={formData && formData.batch}
+              onChange={handleChange("batch")}
             />
           </div>
           <div className="col-md-4 mt-3">
           <label className="location-form-label" for="inputPassword4">
-              Role
+              Roll No
             </label>
             <input
               placeholder="Roll No"
               type="text"
               name="rollno"
-              value={formData.rollno}
-              onChange={handleChange}
+              value={formData && formData.rollno}
+              onChange={handleChange("rollno")}
             />
         </div>
         <div className=" col-md-4 mt-3">
@@ -121,8 +149,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
             placeholder="password"
             type="text"
             name="pwd"
-            value={formData.pwd}
-            onChange={handleChange}
+            value={formData && formData.pwd}
+            onChange={handleChange("pwd")}
           />
         </div>
         </div>
@@ -136,8 +164,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 placeholder="City"
                 type="text"
                 name="city"
-                value={formData.city}
-                onChange={handleChange}
+                value={formData && formData.city}
+                onChange={handleChange("city")}
               />
             </div>
             <div className=" col-md-4 ">
@@ -148,8 +176,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 placeholder="District"
                 type="text"
                 name="district"
-                value={formData.district}
-                onChange={handleChange}
+                value={formData && formData.district}
+                onChange={handleChange("district")}
               />
             </div>
             <div className=" col-md-4 ">
@@ -160,8 +188,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 placeholder="State"
                 type="text"
                 name="state"
-                value={formData.state}
-                onChange={handleChange}
+                value={formData?.state}
+                onChange={handleChange("state")}
               />
             </div>
             <div className=" col-md-4 mt-3">
@@ -172,8 +200,8 @@ const StudentForm = ({handleChange,dateHandler,submitHandler, handleClick, formD
                 placeholder="Pincode"
                 type="text"
                 name="pincode"
-                value={formData.pincode}
-                onChange={handleChange}
+                value={formData?.pincode}
+                onChange={handleChange("pincode")}
               />
             </div>
             <div className=" col-12 mt-3  d-flex justify-content-end">
