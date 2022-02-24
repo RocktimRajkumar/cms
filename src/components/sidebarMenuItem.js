@@ -1,10 +1,10 @@
 export const adminMenuItem = [
-    {
-        name:"Dashboard",
-        exact: true,
-        to:"/dashboard",
-        iconClassName:"bi bi-speedometer2"
-    },
+    // {
+    //     name:"Dashboard",
+    //     exact: true,
+    //     to:"/dashboard",
+    //     iconClassName:"bi bi-speedometer2"
+    // },
 
     {
         name:"Admin",
@@ -19,15 +19,9 @@ export const adminMenuItem = [
         iconClassName:"bi bi-shop"
     },
     {
-        name:"Student",
+        name:"Course",
         exact: true,
-        to:"/student",
-        iconClassName:"bi bi-people-fill"
-    },
-    {
-        name:"Subject",
-        exact: true,
-        to:"/subject",
+        to:"/course",
         iconClassName:"bi bi-shop"
     },
     {
@@ -37,27 +31,33 @@ export const adminMenuItem = [
         iconClassName:"bi bi-shop"
     },
     {
-        name:"Course",
+        name:"Subject",
         exact: true,
-        to:"/course",
+        to:"/subject",
         iconClassName:"bi bi-shop"
     },
+    {
+        name:"Student",
+        exact: true,
+        to:"/student",
+        iconClassName:"bi bi-people-fill"
+    }, 
     {
         name:"Marksheet",
         exact: true,
         to:"/marksheet",
         iconClassName:"bi bi-shop"
-    },
+    }
 ]
 
 
 export const userMenuItem = [
-    {
-        name:"Dashboard",
-        exact: true,
-        to:"/dashboard",
-        iconClassName:"bi bi-speedometer2"
-    },
+    // {
+    //     name:"Dashboard",
+    //     exact: true,
+    //     to:"/dashboard",
+    //     iconClassName:"bi bi-speedometer2"
+    // },
     {
         name:"Student",
         exact: true,

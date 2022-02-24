@@ -10,6 +10,7 @@ import NavBar from './components/NavBar';
 import Login from './pages/auth/Login';
 import Admin from './pages/adminManagement/Admin';
 import Student from './pages/student/Student';
+import Department from './pages/department/Department'
 
 const user = localStorage.getItem("User");
 const userDetails = JSON.parse(user);
@@ -39,6 +40,7 @@ const App  = ()=>{
                         <Route exact path="/dashboard" component={Dashboard} />
                         <Route exact path="/admin" component={Admin} />
                         <Route exact path="/student" component={Student} />
+                        <Route exact path="/department" component={Department} />
                     
                         
                     </Switch>
