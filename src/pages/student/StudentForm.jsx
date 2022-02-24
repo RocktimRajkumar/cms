@@ -65,15 +65,7 @@ console.log(formData)
           </div>
         
           <div className=" col-md-4 mt-3">
-          {/* <label className="location-form-label" for="inputEmail4">
-            Gender
-          </label>
-            <Select
-                defaultValue={formData.gender}
-                options={options}
-                className="price-form-data "
-                onChange={onSelectChange("gender")}
-            /> */}
+          
             <InputControl
             type="select"
             name="gender"
@@ -96,15 +88,7 @@ console.log(formData)
         </LocalizationProvider>
           </div>
           <div className=" col-md-4 mt-3">
-          {/* <label className="location-form-label" for="inputEmail4">
-            Department
-          </label>
-            <Select
-              value={formData.dept_id}
-                options={departmentOptions}
-                className="price-form-data "
-                onChange={onSelectChange("dept_id")}
-            /> */}
+      
            <InputControl
             type="select"
             name="dept_id"

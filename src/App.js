@@ -5,7 +5,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
 import Sidebar from './components/Sidebar';
 import Dashboard from '../src/pages/dashboard/Dashboard';
-
+import Marksheet from './pages/marksheet/Marksheet';
 import NavBar from './components/NavBar';
 import Login from './pages/auth/Login';
 import Admin from './pages/adminManagement/Admin';
@@ -47,7 +47,7 @@ const App  = ()=>{
                         <Route exact path="/course" component={Course} />
                         <Route exact path="/semester" component={Semester} />
                         <Route exact path="/subject" component={Subject} />
-                    
+                        <Route exact path="/marksheet" component={Marksheet} />
                         
                     </Switch>
                 </div>
