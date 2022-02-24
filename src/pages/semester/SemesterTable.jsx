@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {makeStyles, TableBody, TableCell, TableRow,  } from '@material-ui/core';
 import useTable from '../../utils/table/useTable';
-import adminHeader from './courseHeader';
+import adminHeader from './semesterHeader';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Tooltip from '@material-ui/core/Tooltip';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const CourseTable = props => {
+const SemesterTable = props => {
     const classes = useStyles();
     const [records, setRecords] = useState([]);
     const [filterFn, setFilterFn] = useState({fn: items => {return items}})
@@ -74,11 +74,9 @@ const CourseTable = props => {
                             recordsAfterPagingAndSorting().length > 0 ? (
                                 recordsAfterPagingAndSorting().map((record, index) =>(
                                     <TableRow key={index}>
-                                    <TableCell style={{fontWeight:"500"}}>{record.course_id}</TableCell>
-                                    <TableCell >{record.course_name}</TableCell>
+                                    <TableCell style={{fontWeight:"500"}}>{record.sem_id}</TableCell>
+                                    <TableCell >{record.sem_no}</TableCell>
                                     <TableCell >{record.course_code}</TableCell>
-                                    <TableCell >{record.course_duration}</TableCell>
-                                    <TableCell >{record.dept_code}</TableCell>
                                     <TableCell >{record.is_active ? 'Active':'Not Active'}</TableCell>
                                     <TableCell >
                                         <div className="d-flex  ">
@@ -113,4 +111,4 @@ const CourseTable = props => {
     )
 }
 
-export default CourseTable
+export default SemesterTable
