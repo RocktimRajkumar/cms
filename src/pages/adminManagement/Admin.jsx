@@ -8,6 +8,7 @@ import axios from 'axios';
 import './style.css'
 
 
+
 const Admin = (props) =>{
     const [isOpen, setOpen] = useState(false)
     const [id, setId] = useState('');
@@ -23,14 +24,27 @@ const Admin = (props) =>{
     const getData = () => {
         props.getAllAdminata()
     }
-    const handleChange = (e) => {
+    const handleChange =name => (e) => {
         e.preventDefault();
-        const fieldName = e.target.getAttribute("name");
+        const fieldName = name;
         const fieldValue = e.target.value;
         const newFormData = { ...formData };
         newFormData[fieldName] = fieldValue;
         setFormData(newFormData);
       };
+      const handleStatusChange = e =>{
+          const {value} = e;
+          if(value==="Active"){
+              setFormData({
+                  ...formData, ["status"]:true
+              })
+          }
+          else{
+            setFormData({
+                ...formData, ["status"]:false
+            })
+          }
+      }
       const submitHandler =async e =>{
           e.preventDefault();
           const {name, email, password} = formData;
@@ -68,7 +82,7 @@ const Admin = (props) =>{
                     name,
                     email,
                      pwd:password,
-                     is_active:true
+                     is_active:formData.status
                 })
             });
             const res = await rawResponse.json();
@@ -94,17 +108,20 @@ const Admin = (props) =>{
       
     const handleForm = () =>{
         setOpen(open=> !open)
+        setEditMode(false);
+        clearForm()
     }
     const editClickHandler = (record) =>{
         setOpen(open => !open)
         console.log("edir",record);
         setId(record.user_id)
-        setEditMode(mode=>!mode);
+        setEditMode(true);
 
         setFormData({
             name:record.uname,
             email: record.email,
-            password:record.password
+            password:record.password,
+            status: record.is_active
         })
     }
     return(
@@ -126,6 +143,7 @@ const Admin = (props) =>{
                     handleChange={handleChange}
                     handleClick={submitHandler}
                     editMode={editMode}
+                    handleStatusChange={handleStatusChange}
                     />
                 ):(
                 <AdminTable

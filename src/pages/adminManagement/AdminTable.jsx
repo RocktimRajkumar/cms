@@ -64,7 +64,7 @@ const AdminTable = props => {
         TblPagination, 
         recordsAfterPagingAndSorting
         }  = useTable(props.records, adminHeader, filterFn);
- 
+
     return (
         <div>
             <div className={classes.pageContent} style={{marginBottom:"10px"}}>
@@ -95,7 +95,7 @@ const AdminTable = props => {
                                     <TableCell style={{fontWeight:"500"}}>{record.uname}</TableCell>
                                     <TableCell >{record.email}</TableCell>
                                     <TableCell >{record.password}</TableCell>
-                                    <TableCell >{record.is_active ? 'Active':'Not Active'}</TableCell>
+                                    <TableCell >{record.is_active ? <span className='text-success'>Active</span>:<span className='text-danger'>Not Active</span>}</TableCell>
                                     <TableCell >
                                         <div className="d-flex  ">
                                             <Tooltip title="Edit User" placement="bottom">

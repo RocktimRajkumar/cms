@@ -65,7 +65,7 @@ console.log(props.records)
     }
 
     
- 
+ console.log(props.records)
     return (
         <div>
             {
@@ -112,11 +112,11 @@ console.log(props.records)
                                                             <OpenInNewIcon/>
                                                         </button>    
                                                     </Tooltip>
-                                                    <Tooltip title="Delete User" placement="bottom">
+                                                    <Tooltip title="View Details" placement="bottom">
                                                         <button
                                                         onClick={()=>props.editClickHandler(record)}
                                                          className={`border-0 p-1 action-btn`} >
-                                                            <DeleteOutlineIcon/>
+                                                            <i class=" bi bi-eye"></i>
                                                         </button>
                                                     </Tooltip>
                                                 </div>
