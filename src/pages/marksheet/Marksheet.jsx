@@ -2,21 +2,25 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import MarksheetForm from './MarksheetForm';
 import MarksheetTable from './MarksheetTable';
+import './style.css'
+
 
 const Marksheet = (props) =>{
     const [isOpen, setOpen] = useState(false)
     const [id, setId] = useState('');
     const [editMode, setEditMode] = useState(false);
     const [subjects, setSubjects] = useState([]);
+    const [rowData, setRowData] = useState({});
     const [students, setStudents] = useState([]);
     const [marksheets, setMarksheets] = useState([]);
+    const [marksheetsDetail, setMarksheetsDetails] = useState([]);
     const [formData, setFormData] = useState({
         student_id: "",
         sub_id: "",
         mark: ""
       });
+
     useEffect(() => {
-        getSubjects();
         getStudentRecords();
         getMarksheetRecords();
         getSubjectRecords();
@@ -25,30 +29,32 @@ const Marksheet = (props) =>{
     const getSubjectRecords = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/subject');
         if(res){
-            console.log("check res new", res.data.message.records);
+            console.log("check subject res", res.data.message.records);
             setSubjects(res.data.message.records);
         }
-    }
-    const getSubjects = async () => {
-        const res = await axios.get('https://exam-manag.herokuapp.com/subject');
-        if(res){
-            console.log("check res sub", res);
-            // setSubjects(res.data.message.records);
-        }
-        
     }
     const getStudentRecords = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/student');
         if(res){
-            console.log("check res", res.data.message.records);
+            console.log("check student res", res.data.message.records);
             setStudents(res.data.message.records);
         }
     }
     const getMarksheetRecords = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/marksheet');
         if(res){
-            console.log("check res", res.data.message.records);
-            setMarksheets(res.data.message.records);
+            console.log("check marsheet res", res.data.message.records);
+            var data = res.data.message.records;
+            setMarksheets(data);
+        }
+    }
+
+    const getStudentMarks = async (id) =>{
+        console.log("student marks, ",id)
+        const res = await axios.get(`https://exam-manag.herokuapp.com/marksheet/${id}/report`);
+        if(res){
+            console.log("check res new", res.data.message.records);
+            setMarksheetsDetails(res.data.message);
         }
     }
     
@@ -56,7 +62,7 @@ const Marksheet = (props) =>{
       const onSelectChange = (name) => (e) => {
         if(name==="student"){
             setFormData({
-                ...formData, ["stu_id"]: e.value
+                ...formData, ["student_id"]: e.value
             })
         }
         else if(name==="mark"){
@@ -72,6 +78,56 @@ const Marksheet = (props) =>{
 
     }
 
+    const submitHandler =async e =>{
+        e.preventDefault();
+        const {student_id, sub_id, mark, is_active} = formData;
+        if(!editMode){
+          const rawResponse = await fetch('https://exam-manag.herokuapp.com/marksheet', {
+              method: 'POST',
+              headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                sub_id,
+                student_id,
+                mark
+            })
+          });
+          const content = await rawResponse.json();
+          if(content && content.error){
+              alert(content.error.message);
+          }else{
+              alert("Created successfully")
+              setOpen((open)=> !open)
+              getMarksheetRecords();
+              clearForm();
+          }
+        }else{
+          const rawResponse = await fetch(`https://exam-manag.herokuapp.com/marksheet/${id}`, {
+              method: 'PUT',
+              headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  mark:mark,
+                  is_active:is_active
+              })
+          });
+          const res = await rawResponse.json();
+          console.log("update", res)
+          if(res){
+              alert(res.message.Success)
+              setOpen((open)=> !open)
+              setEditMode(mode=>!mode)
+              getSubjectRecords();
+              clearForm();
+
+          }
+        }
+    }
+
       const clearForm = () => {
           setFormData({
             student_id: "",
@@ -82,6 +138,10 @@ const Marksheet = (props) =>{
       
     const handleForm = () =>{
         setOpen(open=> !open)
+    }
+
+    const marksheetDetailHandler = (record) =>{
+        getStudentMarks(record._id.student_id);
     }
    
     return(
@@ -102,6 +162,7 @@ const Marksheet = (props) =>{
                     students={students}
                     subjects={subjects}
                     formData={formData}
+                    handleClick={submitHandler}
                     onSelectChange={onSelectChange}
                     />
                 ):(
@@ -109,6 +170,8 @@ const Marksheet = (props) =>{
                 students={students}
                 subjects={subjects}
                 records={marksheets}
+                marksheetDetailHandler={marksheetDetailHandler}
+                marksheetsDetail={marksheetsDetail}
                />
                 )
             }

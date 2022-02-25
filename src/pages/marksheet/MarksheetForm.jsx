@@ -4,14 +4,12 @@ import {InputControl} from '../../utils/FormControls';
 
 let statusTypes = ["Active", "Not Active"].map(item=>({value:item,label:item}))
 
-const MarksheetForm = ({onSelectChange, formData, editMode, students,subjects}) => {
+const MarksheetForm = ({onSelectChange, formData, handleClick, editMode, students,subjects}) => {
 
-  console.log("f", formData)
   const subjectList = subjects?.map(sub=>({
     value:sub.sub_id,
     label:sub.sub_name
   }))
-  console.log(subjects);
   const studentList = students?.map(student=>({
     value:student.student_id,
     label:student.s_name
@@ -26,16 +24,16 @@ const MarksheetForm = ({onSelectChange, formData, editMode, students,subjects}) 
   return (
     <div className="w-100 p-5" >
         <div className='d-flex justify-content-center'>
-        <form autoComplete="off"  style={{width:"500px"}} className="card shadow px-5 pb-5 pt-2">
+        <form autoComplete="off" onSubmit={handleClick}  style={{width:"500px"}} className="card shadow px-5 pb-5 pt-2">
         
         <div className='mt-2 '>
           <InputControl
               type="select"
-              name="stu_id"
+              name="stud_id"
               labelName="Student"
               placeholder="Select Student"
               onChange={onSelectChange("student")}
-              value={formData && studentName(formData.stu_id)}
+              value={formData && studentName(formData.student_id)}
               options={studentList}
               required
             />
@@ -68,7 +66,7 @@ const MarksheetForm = ({onSelectChange, formData, editMode, students,subjects}) 
           <input
             type="submit"
             className="btn btn-primary  mt-3 w-100"
-            // onClick={handleClick}
+            onClick={handleClick}
           />
         </div>
       </form>
