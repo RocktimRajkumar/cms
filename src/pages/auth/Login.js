@@ -13,7 +13,8 @@ import { Redirect } from 'react-router';
 import FormControl from '@material-ui/core/FormControl';
 import WaycoolSidebarLogo from '../../assets/img/sidebar/WaycoolSidebarLogo.png';
 import { useHistory } from 'react-router-dom';
-
+import {InputControl} from '../../utils/FormControls';
+import axios from 'axios';
 const authStyle = {
     mainDiv:{
       boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
@@ -79,39 +80,90 @@ const authStyle = {
 const user = localStorage.getItem("User");
 const userDetails = JSON.parse(user);
 const type = userDetails && userDetails.userType;
-
+let userTypes = ["Admin", "Student"].map(item=>({value:item,label:item}))
 function Login(props) {
     const history = useHistory();
     const [loginScreen, setLoginScreen] = useState(true);
     const [loginErr, setLoginErr] = useState(true);
     const [showPassword, setShowPassword] = useState(true);
     const [loginSUccess, setLoginSuccess] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [userType, setUserType] = useState('');
 
     const [formData, setFormData] = useState({
-        email:"ramdas.gupta@waycool.in",
-        password:"2019"
+        email:"",
+        password:""
     });
-    console.log("user", props.userDetails.name)
-
+    const isValidated = () =>{
+      return true
+    }
+    const storeUserInLocalStorage = () =>{
+      alert("hello")
+        localStorage.setItem({
+          user:{
+            email:formData.email,
+            type:userType
+          }
+        })
+    }
     const loginHandler = (e)=>{
         e.preventDefault();
+        setLoader(true)
         let loginData = {};    
         loginData["email"] = formData.email;
-        loginData["password"] = formData.password
-        const validated = true;
+        loginData["pwd"] = formData.password
+        const validated = isValidated();
         if(validated){
-           props.actions.getLogin(loginData);
-            // setLoginSuccess(true);
-            console.log(props.userDetails)
+          if(userType===""){
+            alert("Please select user type")
+          }
+          else if(userType==="Admin"){
+            axios.post('https://exam-manag.herokuapp.com/admin/login', loginData)
+            .then(function (response) {
+                console.log("login",response.data.message.Login)
+                const res  =response.data.message.Login;
+                if(res==="Success"){
+                  setLoader(false);
+               
+                  alert("loginSUccess")
+                  localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Admin"}))
+                  history.push("/admin")
+                  
+                }
+            })
+            .catch(function (error) {
+              
+              console.log("err",error);
+            });
+           }
+           else{
+            setLoader(false);
+            alert("loginSUccess")
+            localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Student", id:"1"}))
+            
+            history.push("/student")
+            // axios.post('https://exam-manag.herokuapp.com/student/login', loginData)
+            // .then(function (response) {
+            //     console.log("login",response.data.message.Login)
+            //     const res  =response.data.message.Login;
+            //     if(res==="Success"){
+            //       setLoader(false);
+            //       alert("loginSUccess")
+            //       localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Student", id:"1"}))
+            //       history.push("/student")
+                  
+            //     }
+            // })
+            // .catch(function (error) {
+              
+            //   console.log("err",error);
+            // });
+
+           }
+           
         }
     }
   const  onChangeHandler =(name)=> (e)=>{
-    // alert(name)
-        // setFormData(
-        //     {
-        //         formData: _.set({ ...formData }, name, e.target.value),
-        //      }
-        // )
         setFormData({...formData, [name]:e.target.value});
       }
      const  handleClickShowPassword = () => {
@@ -125,28 +177,28 @@ function Login(props) {
       };
       const greetingText = greeting();
 
-      if(!loginSUccess){
+      console.log("user", userType)
+ 
+    
     return (
         <div className="container-fluid  w-100 d-flex flex column justify-content-center align-items-center" style={{height:"100vh",}} >
-          {
-            loginScreen && (
               <div className="row" style={authStyle.mainDiv}>
                 <div className=" border col-md-6 p-4" style={authStyle.bg}>
                   <div>
                     <img src={WaycoolSidebarLogo} alt="logo" />
-                    <span className=" ml-2" style={authStyle.company}>Waycool</span>
+                    <span className=" ml-2" style={authStyle.company}>LOGO</span>
                   </div>
                   <div style={{height:"90%", position:"relative"}}>
                     <div style={authStyle.appName}>
                       <h4>Welcome To</h4>
-                      <h3>Benchmarker</h3>
+                      <h3>EMS</h3>
                       {/* <h2>Planner Tool</h2> */}
                     </div>
                   </div>
                 </div>
-              <div className=" col-md-6 px-4 py-5 " >
+              <div className=" col-md-6 px-4 pb-5 pt-2" >
                 <div>
-                  <div>Hello !</div>
+                  <div>Hello ! {loader?"loading":""}</div>
                   <div style={authStyle.greeting}>{greetingText}</div>
                 </div>
                 <div className=" d-flex justify-content-center mt-3">
@@ -191,6 +243,18 @@ function Login(props) {
                       </InputAdornment>
                       }
                     />
+                  <div className='mt-2'>
+                  <InputControl
+                      type="select"
+                      name="type"
+                      labelName="User Type"
+                      placeholder="Select User Type"
+                      onChange={(e)=>setUserType(e.value)}
+                      // value={formData.status ? "Active" : "Not Active"}
+                      options={userTypes}
+                      required
+                    />
+                  </div>
                   </FormControl>
               
 
@@ -204,60 +268,12 @@ function Login(props) {
           </form>
           </div>
           </div>
-            )
-          }
-           {
-             !loginScreen && (
-              <Row
-              style={{
-                height: '100vh',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Col md={6} lg={4}>
-                <Card body>
-                 <div>
-                   {/* Initially we can see LogingIn ,please Wait */}
-                    {props.loginError=='' && <span>Loging in ,Please Wait</span>}
-                 </div>
-                 {/* if User Logged in Successdull then it will redirect to Dashboard */}
-                 {props.userDetails && props.userDetails.name  &&  <Redirect to="/dashboard" />}
-                 {/* if login failed it redirect to one waycool Home Page. */}
-      {/*          
-                 {loginError!=='' && setTimeout(() => {window.location.href='http://one.waycool.in/index.php'}, 1000) && <span className="text-danger">Login Failed ,{loginError}</span>} 
-                */}
-                </Card>
-              </Col>
-            </Row>
-             )
-           }
+           
+           
       </div>
     )
     }
-    else{
-        return(
-           <Redirect to="/dashbaord"/>
-        )
-    }
-}
 
-const mapStateToProps = state => {
-    return {
-      userDetails:state.login.userData,
-      loginError: state.loginError
-    };
-  };
-  
-  const mapDispatchToProps = dispatch => {
-    return {
-        actions: bindActionCreators(
-          {
-            getLogin: actions.signInUser,
-            
-            
-          },
-          dispatch,
-        ),
-      };
-  };
-  export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+
+  export default Login;

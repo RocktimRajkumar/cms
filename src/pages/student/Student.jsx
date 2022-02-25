@@ -5,8 +5,12 @@ import './style.css'
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable'
 import Password from 'antd/lib/input/Password';
+import StudentDetails from './StudentDetails';
 
-
+    const user = localStorage.getItem("user");
+    const userDetails = JSON.parse(user);
+    const type = userDetails?.type
+    const userId = userDetails?.id;
 const Student = (props) =>{
     const [isOpen, setOpen] = useState(false)
     const [id, setId] = useState('');
@@ -41,6 +45,7 @@ const Student = (props) =>{
             setRecords(res.data.message.records);
         }
     }
+
     const getDepartments = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/department');
         if(res){
@@ -173,6 +178,13 @@ const Student = (props) =>{
         });
         setEditMode(true)
 
+    }
+
+    const studentData = records?.find(student=> student.student_id==userId);
+    console.log("test student",studentData);
+
+    if(type==="Student"){
+        return <StudentDetails rowData={studentData} />
     }
 
     return (

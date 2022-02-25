@@ -3,7 +3,12 @@ import axios from 'axios';
 import MarksheetForm from './MarksheetForm';
 import MarksheetTable from './MarksheetTable';
 import './style.css'
+import MarksheetDetails from './MarsheetDetails';
 
+const user = localStorage.getItem("user");
+    const userDetails = JSON.parse(user);
+    const type = userDetails?.type
+    const userId = userDetails?.id;
 
 const Marksheet = (props) =>{
     const [isOpen, setOpen] = useState(false)
@@ -25,6 +30,12 @@ const Marksheet = (props) =>{
         getMarksheetRecords();
         getSubjectRecords();
     }, [])
+
+    useEffect(()=>{
+        if(type==="Student"){
+            getStudentMarks(userId);
+        }
+    },[])
 
     const getSubjectRecords = async () =>{
         const res = await axios.get('https://exam-manag.herokuapp.com/subject');
@@ -144,6 +155,9 @@ const Marksheet = (props) =>{
         getStudentMarks(record._id.student_id);
     }
    
+    if(type==="Student"){
+        return <MarksheetDetails rowData={marksheetsDetail} type={type}/>
+    }
     return(
         <div className="w-100 p-5" style={{height:"calc(100% - 64px)", overflow:"auto"}}>
             <div className='row'>

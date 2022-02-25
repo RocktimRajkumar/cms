@@ -15,7 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import userImage from '../assets/img/users/300_13.jpg';
-
+import {Redirect} from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -84,7 +84,7 @@ export default function NavBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+ const [logout, setLogout] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -96,14 +96,23 @@ export default function NavBar() {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (e) => {
+    e.preventDefault();
     setAnchorEl(null);
     handleMobileMenuClose();
+    
   };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  const logoutHandler = () =>{
+    localStorage.removeItem('user');
+    setLogout(true);
+  }
+  if(logout){
+    return <Redirect to="/" />
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -116,9 +125,7 @@ export default function NavBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );
 

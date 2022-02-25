@@ -10,10 +10,15 @@ import {adminMenuItem, userMenuItem} from './sidebarMenuItem';
 * @function Sidebar 
 **/
 
-const type = "Admin";
-const menus = type==="Admin" ? adminMenuItem : type==="User" ? userMenuItem:[];
+
 
 const Sidebar = (props)=>{
+    const data = localStorage.getItem("user");
+    const userDetails = JSON.parse(data);
+    console.log("test data",data)
+    const type = userDetails?.type
+    console.log("data",type)
+    const menus = type==="Admin" ? adminMenuItem : type==="Student" ? userMenuItem:[];
     const [inactive, setInactive] = React.useState(false);
     useEffect(()=>{
         if(inactive){
@@ -22,7 +27,8 @@ const Sidebar = (props)=>{
             })
         }
         props.onCollapse(inactive);
-    },[inactive])
+    },[inactive]);
+
     return(
         <div className={`sidebar ${inactive?'inactive':''}`}>
            {/* Top section of sidebar  */}

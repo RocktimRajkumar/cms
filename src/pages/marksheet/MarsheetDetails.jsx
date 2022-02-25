@@ -10,9 +10,13 @@ const MarksheetDetails = (props) => {
   }
   return (
     <div>
-      <span className="backbutton" onClick={handleDetails}>
+      {
+        props?.type==="Student" ? '':(
+          <span className="backbutton" onClick={handleDetails}>
         <i class="bi bi-arrow-left text-primary" style={{fontWeight:"800"}}>Back</i>
       </span>
+        )
+      }
       <h5 className="text-center m-4">Marksheet Detail of {rowData?.name}</h5>
       <table className="table table-bordered table-hover">
         <thead className="bg-light">

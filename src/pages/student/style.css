@@ -1,9 +1,19 @@
 input {
-    padding: 5px;
-    width: 100%;
-    outline: none;
-  }
-  input:focus {
-    border: 1.5px solid #0d6efd;
-    border-radius: 3px;
-  }
+  padding: 5px;
+  width: 100%;
+  outline: none;
+}
+input:focus {
+  border: 1.5px solid #0d6efd;
+  border-radius: 3px;
+}
+
+.label {
+  color: "black";
+  font-weight: 500;
+}
+.value {
+  color: "#424242";
+  font-weight: 800;
+  font-size: 20px;
+}

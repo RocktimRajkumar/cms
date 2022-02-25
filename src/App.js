@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useDebugValue, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
@@ -14,40 +14,43 @@ import Department from './pages/department/Department'
 import Course from './pages/course/Course'
 import Semester from './pages/semester/Semester'
 import Subject from './pages/subject/Subject'
-
-const user = localStorage.getItem("User");
-const userDetails = JSON.parse(user);
-const type = userDetails && userDetails.userType;
-const App  = ()=>{
-
+import { Redirect } from 'react-router';
+import PrivateRoute from './PrivateRoute'
+const App  = ()=>{    
+    const user = localStorage.getItem("user");
+    const userDetails = JSON.parse(user);
+    const type = userDetails?.type
     const [inactive, setInactive] = useState(false);
     const [loginVisible, setLoginVisible] = useState(true);
-    if(!userDetails){
-        return <Login/>
+    if(!type){
+        return <Login />
     }
-    else{
-
+    // else{
+    console.log("type",type);
     
     return(
         <div className="App">
             <Router>
-                <Sidebar
-                onCollapse = {(value) => {
-                    setInactive(value);
-                }}
-                />
+             <Route exact path="/" component={Login} />
+               <Sidebar
+                    onCollapse = {(value) => {
+                        setInactive(value);
+                    }}
+                    />
+                
                 <div className={`main-content ${inactive ? "inactive":""}`}>
-                    <NavBar/>
-                    <Switch>
+                  <NavBar/>
                     
-                        <Route exact path="/dashboard" component={Dashboard} />
-                        <Route exact path="/admin" component={Admin} />
-                        <Route exact path="/student" component={Student} />
-                        <Route exact path="/department" component={Department} />
-                        <Route exact path="/course" component={Course} />
-                        <Route exact path="/semester" component={Semester} />
-                        <Route exact path="/subject" component={Subject} />
-                        <Route exact path="/marksheet" component={Marksheet} />
+                    <Switch>
+                        {/* <Route exact path="/" component={Login} /> */}
+                        <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                        <PrivateRoute exact path="/admin" component={Admin} />
+                        <PrivateRoute exact path="/student" component={Student} />
+                        <PrivateRoute exact path="/department" component={Department} />
+                        <PrivateRoute exact path="/course" component={Course} />
+                        <PrivateRoute exact path="/semester" component={Semester} />
+                        <PrivateRoute exact path="/subject" component={Subject} />
+                        <PrivateRoute exact path="/marksheet" component={Marksheet} />
                         
                     </Switch>
                 </div>
@@ -55,7 +58,7 @@ const App  = ()=>{
             
         </div>
     )
-            }
+            // }    
 }
 
 export default App;
