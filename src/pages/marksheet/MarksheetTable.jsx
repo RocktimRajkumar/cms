@@ -13,32 +13,22 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import SearchIcon from '@material-ui/icons/Search';
 import Notification from '../../utils/Notification';
 import {Spin} from 'antd';
+import MarksheetDetails from './MarsheetDetails';
 
 const useStyles = makeStyles(theme => ({
     pageContent:{
-        // margin: theme.spacing(5),
         padding: theme.spacing(1)
     }
 }))
 
 
 const MarksheetTable = props => {
-    const {students, subjects} = props;
     const classes = useStyles();
-    const [records, setRecords] = useState([]);
     const [filterFn, setFilterFn] = useState({fn: items => {return items}})
     const [anchorEl, setAnchorE1] = useState(null);
+    const [showDetails, setShowDetails] = useState(false);
+
   
-    console.log("ma",props.records)
-
-    // const data = records?.length > 0
-    //     ?  records.map((user) => ({
-    //         UserName: user.name,
-    //         email: user.email,
-    //         UserType: user.userType
-    //       }))
-    //     : [];
-
     const handleSearch = e => {
         let target = e.target;
         setFilterFn({
@@ -60,6 +50,12 @@ const MarksheetTable = props => {
         setAnchorE1(null)
       };
 
+
+      const handleDetails = record => {
+        setShowDetails(o=>!o)
+        props.marksheetDetailHandler(record)
+    }
+
     const {
         TblContainer,
         TblHead, 
@@ -67,16 +63,10 @@ const MarksheetTable = props => {
         recordsAfterPagingAndSorting
         }  = useTable(props.records, marksheetHeader, filterFn);
 
-    const studentName = (id) =>{
-            return students?.find(obj => obj.student_id == id);
-           }
-           
-    // const subjectName = id =>{
-    //     return subjects?.find(obj => obj.sub_id == id);
-    // }     
-    console.log("sub", subjects)  
     return (
         <div>
+            {
+                !showDetails ? (
             <div className={classes.pageContent} style={{marginBottom:"10px"}}>
                 <div className="row px-2  ">
                 {/* <div className=" col-1 d-flex justify-content-end align-items-center bg-gray"><SearchIcon/></div> */}
@@ -102,25 +92,22 @@ const MarksheetTable = props => {
                             recordsAfterPagingAndSorting().length > 0 ? (
                                 recordsAfterPagingAndSorting().map((record, index) =>(
                                     <TableRow key={index}>
-                                    <TableCell style={{fontWeight:"500"}}>{record.student_id}</TableCell>
-                                    <TableCell >{record.sub_id}</TableCell>
-                                    <TableCell >{record.mark}</TableCell>
-                                    <TableCell >{record.is_active ? <span className='text-success'>Active</span>:<span className='text-danger'>Not Active</span>}</TableCell>
+                                    <TableCell style={{fontWeight:"500"}}>{record?._id.student_id}</TableCell>
+                                    <TableCell >{record?._id.student_name}</TableCell>
+                                    <TableCell >{record?.total}</TableCell>
+                                    <TableCell >{record?.count}</TableCell>
+                                    <TableCell >{record?.percentage.toFixed(2)}%</TableCell>
+                                    <TableCell >{record?.cgpa.toFixed(2)}</TableCell>
+                                    <TableCell >{record?._id.status ? <span className='text-success'>Active</span>:<span className='text-danger'>Not Active</span>}</TableCell>
                                     <TableCell >
                                         <div className="d-flex  ">
-                                            <Tooltip title="Edit User" placement="bottom">
-                                                <button 
-                                                onClick={()=>props.editClickHandler(record)}
-                                                className={`border-0 p-1 action-btn`} 
-                                                style={{marginRight:"10px"}}>
-                                                    <OpenInNewIcon/>
-                                                </button>    
-                                            </Tooltip>
-                                            <Tooltip title="Delete User" placement="bottom">
-                                                <button className={`border-0 p-1 action-btn`} >
-                                                    <DeleteOutlineIcon/>
-                                                </button>
-                                            </Tooltip>
+                                        <Tooltip title="View Details" placement="bottom">
+                                            <button
+                                            onClick={()=>handleDetails(record)}
+                                                className={`border-0 p-1 action-btn`} >
+                                                <i class=" bi bi-eye"></i>
+                                            </button>
+                                        </Tooltip>
                                         </div>
                                     </TableCell>
                                     </TableRow>
@@ -135,32 +122,12 @@ const MarksheetTable = props => {
                 </TblContainer>
                 <TblPagination/>
             </div>
-{/* 
-            <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            >
-          <MenuItem onClick={handleClose}> 
-          <CSVLink
-                  data={data}
-                  filename={"benchmarkerAdminUser.csv"}
-                  className="btn bg-gray w-100"
-                  target="_blank"
-                >
-                  <span>
-                    <GetAppIcon fontSize="small"/>
-                    Export
-                </span> 
-                </CSVLink>
-          </MenuItem>
-        </Menu> */}
-        {/* Notification after  event  */}
-        {/* <Notification
-          notify={notify}
-        /> */}
+            ):(
+                <div className='border mt-3 card shadow' style={{height:'400px'}}>
+                    <MarksheetDetails rowData={props.marksheetsDetail} showdetail={setShowDetails}/>
+                </div>
+            )
+        }
         </div>
     )
 }
