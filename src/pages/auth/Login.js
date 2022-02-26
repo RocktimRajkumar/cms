@@ -85,7 +85,7 @@ function Login(props) {
     const history = useHistory();
     const [loginScreen, setLoginScreen] = useState(true);
     const [loginErr, setLoginErr] = useState(true);
-    const [showPassword, setShowPassword] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
     const [loginSUccess, setLoginSuccess] = useState(false);
     const [loader, setLoader] = useState(false);
     const [userType, setUserType] = useState('');
@@ -132,32 +132,28 @@ function Login(props) {
                 }
             })
             .catch(function (error) {
-              
+              alert("login Failed");
               console.log("err",error);
             });
            }
            else{
             setLoader(false);
-            alert("loginSUccess")
-            localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Student", id:"1"}))
-            
-            history.push("/student")
-            // axios.post('https://exam-manag.herokuapp.com/student/login', loginData)
-            // .then(function (response) {
-            //     console.log("login",response.data.message.Login)
-            //     const res  =response.data.message.Login;
-            //     if(res==="Success"){
-            //       setLoader(false);
-            //       alert("loginSUccess")
-            //       localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Student", id:"1"}))
-            //       history.push("/student")
+            axios.post('https://exam-manag.herokuapp.com/student/login', loginData)
+            .then(function (response) {
+                console.log("login",response.data.message.Login)
+                const res  =response.data.message.Login;
+                if(res==="Success"){
+                  setLoader(false);
+                  alert("loginSUccess")
+                  localStorage.setItem("user", JSON.stringify({email:loginData.email, type:"Student", id:response.data.message.id}))
+                  history.push("/student")
                   
-            //     }
-            // })
-            // .catch(function (error) {
-              
-            //   console.log("err",error);
-            // });
+                }
+            })
+            .catch(function (error) {
+              alert("login Failed");
+              console.log("err",error);
+            });
 
            }
            
